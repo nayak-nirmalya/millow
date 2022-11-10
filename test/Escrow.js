@@ -37,7 +37,9 @@ describe('Escrow', () => {
     await transaction.wait()
 
     // List Property
-    transaction = await escrow.connect(seller).list(1)
+    transaction = await escrow
+      .connect(seller)
+      .list(1, buyer.address, tokens(10), tokens(5))
     await transaction.wait()
   })
 
@@ -71,6 +73,21 @@ describe('Escrow', () => {
 
     it('updates ownership', async () => {
       expect(await realEstate.ownerOf(1)).to.be.equal(escrow.address)
+    })
+
+    it('returns the correct buyer', async () => {
+      const result = await escrow.buyer(1)
+      expect(result).to.be.equal(buyer.address)
+    })
+
+    it('returns the correct purchase price', async () => {
+      const result = await escrow.purchasePrice(1)
+      expect(result).to.be.equal(tokens(10))
+    })
+
+    it('returns the correct escrow amount', async () => {
+      const result = await escrow.escrowAmount(1)
+      expect(result).to.be.equal(tokens(5))
     })
   })
 })
