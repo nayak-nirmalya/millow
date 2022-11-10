@@ -4,8 +4,8 @@ const { ethers } = require('hardhat')
 const IPFS_URL =
   'https://ipfs.io/ipfs/QmTudSYeM7mz3PkYEWXWqPjomRPHogcMFSq7XAvsvsgAPS'
 
-const tokens = (n) => {
-  return ethers.utils.parseUnits(n.toString(), 'ether')
+const tokens = (token) => {
+  return ethers.utils.parseUnits(token.toString(), 'ether')
 }
 
 describe('Escrow', () => {
