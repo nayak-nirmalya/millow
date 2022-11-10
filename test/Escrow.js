@@ -89,5 +89,11 @@ describe('Escrow', () => {
       const result = await escrow.escrowAmount(1)
       expect(result).to.be.equal(tokens(5))
     })
+
+    it('fails if anyone except seller call the list method', async () => {
+      await expect(
+        escrow.connect(lender).list(1, buyer.address, tokens(10), tokens(5)),
+      ).to.be.revertedWith('Only seller can call this method')
+    })
   })
 })
