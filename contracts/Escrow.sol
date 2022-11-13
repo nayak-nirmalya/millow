@@ -26,6 +26,11 @@ contract Escrow {
         _;
     }
 
+    modifier onlyBuyer(uint256 _nftID) {
+        require(msg.sender == buyer[_nftID], "Only buyer can call this method");
+        _;
+    }
+
     constructor(
         address _nftAddress,
         address payable _seller,
@@ -51,5 +56,9 @@ contract Escrow {
         purchasePrice[_nftId] = _purchasePrice;
         escrowAmount[_nftId] = _escrowAmount;
         buyer[_nftId] = _buyer;
+    }
+
+    function depositEarnest(uint256 _nftID) public payable onlyBuyer(_nftID) {
+        require(msg.value >= escrowAmount[_nftID]);
     }
 }
