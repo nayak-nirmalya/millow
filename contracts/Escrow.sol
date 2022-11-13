@@ -20,6 +20,7 @@ contract Escrow {
     mapping(uint256 => uint256) public escrowAmount;
     mapping(uint256 => address) public buyer;
     mapping(uint256 => bool) public inspectionPassed;
+    mapping(uint256 => mapping(address => bool)) public approval;
 
     // Modifiers
     modifier onlyBuyer(uint256 _nftID) {
@@ -50,18 +51,18 @@ contract Escrow {
     }
 
     function list(
-        uint256 _nftId,
+        uint256 _nftID,
         address _buyer,
         uint256 _purchasePrice,
         uint256 _escrowAmount
     ) public payable onlySeller {
         // Transfers NFT from seller to this contract
-        IERC721(nftAddress).transferFrom(msg.sender, address(this), _nftId);
+        IERC721(nftAddress).transferFrom(msg.sender, address(this), _nftID);
 
-        isListed[_nftId] = true;
-        purchasePrice[_nftId] = _purchasePrice;
-        escrowAmount[_nftId] = _escrowAmount;
-        buyer[_nftId] = _buyer;
+        isListed[_nftID] = true;
+        purchasePrice[_nftID] = _purchasePrice;
+        escrowAmount[_nftID] = _escrowAmount;
+        buyer[_nftID] = _buyer;
     }
 
     function depositEarnest(uint256 _nftID) public payable onlyBuyer(_nftID) {
@@ -73,6 +74,10 @@ contract Escrow {
         onlyInspector
     {
         inspectionPassed[_nftID] = _passed;
+    }
+
+    function approveSale(uint256 _nftID) public {
+        approval[_nftID][msg.sender] = true;
     }
 
     function getBalance() public view returns (uint256) {
