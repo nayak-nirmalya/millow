@@ -13,6 +13,7 @@ describe('Escrow', () => {
   let realEstate, escrow
 
   beforeEach(async () => {
+    // Setup Accounts
     ;[buyer, seller, inspector, lender] = await ethers.getSigners()
 
     // Deploy Real Estate
