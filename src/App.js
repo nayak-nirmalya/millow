@@ -35,6 +35,7 @@ function App() {
   return (
     <div>
       <Navigation account={account} setAccount={setAccount} />
+      <Search />
       <div className="cards__section">
         <h3>Welcome to Millow!</h3>
       </div>
