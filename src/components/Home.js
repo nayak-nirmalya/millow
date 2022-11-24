@@ -4,6 +4,60 @@ import { useEffect, useState } from 'react'
 import close from '../assets/close.svg'
 
 const Home = ({ home, provider, escrow, toggleProp }) => {
+  const [hasBought, setHasBought] = useState(false)
+  const [hasLend, setHasLend] = useState(false)
+  const [hasInspected, setHasInspected] = useState(false)
+  const [hasSold, setHasSold] = useState(false)
+
+  const [buyer, setBuyer] = useState(null)
+  const [lender, setLender] = useState(null)
+  const [inspector, setInspector] = useState(null)
+  const [seller, setSeller] = useState(null)
+
+  const [owner, setOwner] = useState(null)
+
+  const fetchDetails = async () => {
+    // Buyer
+    const buyer = await escrow.buyer(home.id)
+    setBuyer(buyer)
+
+    const hasBought = await escrow.approval(home.id, buyer)
+    setHasBought(hasBought)
+
+    // Seller
+    const seller = await escrow.seller(home.id)
+    setSeller(seller)
+
+    const hasSold = await escrow.approval(home.id, seller)
+    setHasSold(hasSold)
+
+    // Lender
+    const lender = await escrow.lender(home.id)
+    setLender(lender)
+
+    const hasLend = await escrow.approval(home.id, lender)
+    setHasLend(hasLend)
+
+    // Inspector
+    const inspector = await escrow.inspector(home.id)
+    setInspector(inspector)
+
+    const hasInspected = await escrow.inspectionPassed(home.id, inspector)
+    setHasInspected(hasInspected)
+  }
+
+  const fetchOwner = async () => {
+    if (await escrow.isListed(home.id)) return
+
+    const owner = await escrow.buyer(home.id)
+    setOwner(owner)
+  }
+
+  useEffect(() => {
+    fetchDetails()
+    fetchOwner()
+  }, [hasSold])
+
   return (
     <div className="home">
       <div className="home__details">
