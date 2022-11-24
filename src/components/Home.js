@@ -25,24 +25,24 @@ const Home = ({ home, provider, account, escrow, toggleProp }) => {
     setHasBought(hasBought)
 
     // Seller
-    const seller = await escrow.seller(home.id)
+    const seller = await escrow.seller()
     setSeller(seller)
 
     const hasSold = await escrow.approval(home.id, seller)
     setHasSold(hasSold)
 
     // Lender
-    const lender = await escrow.lender(home.id)
+    const lender = await escrow.lender()
     setLender(lender)
 
     const hasLend = await escrow.approval(home.id, lender)
     setHasLend(hasLend)
 
     // Inspector
-    const inspector = await escrow.inspector(home.id)
+    const inspector = await escrow.inspector()
     setInspector(inspector)
 
-    const hasInspected = await escrow.inspectionPassed(home.id, inspector)
+    const hasInspected = await escrow.inspectionPassed(home.id)
     setHasInspected(hasInspected)
   }
 
@@ -110,7 +110,7 @@ const Home = ({ home, provider, account, escrow, toggleProp }) => {
     await transaction.wait()
 
     // Seller Finalize
-    ;(transaction = await escrow.connect(signer)).finalizeSale(home.id)
+    transaction = await escrow.connect(signer).finalizeSale(home.id)
     await transaction.wait()
 
     setHasSold(true)
